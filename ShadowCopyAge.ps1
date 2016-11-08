@@ -38,14 +38,7 @@ function Get-ShadowCopyAge
 
     $Volumes = Get-WmiObject Win32_Volume -ComputerName $ComputerName
     Write-Verbose "Got Volumes"
-<#
-    $Copies = $ShadowCopies `
-              | Select VolumeName, 
-                       InstallDate,
-                       PSComputerName, 
-                       @{N='Volume';E={$item = $_; $Volumes | where {$_.DeviceID -like $item.VolumeName} | Select -ExpandProperty Name }} ,
-                       @{N='DateTaken';e={$_.ConvertToDateTime($_.InstallDate)}} 
-#>
+
     $OldestCopy = $ShadowCopies | Group-Object -Property VolumeName | foreach {$_.Group | Select -first 1}
 
     foreach ($item in $OldestCopy)
